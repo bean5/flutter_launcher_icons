@@ -4,6 +4,7 @@ import 'package:args/args.dart';
 import 'package:yaml/yaml.dart';
 import 'package:flutter_launcher_icons/android.dart' as android_launcher_icons;
 import 'package:flutter_launcher_icons/ios.dart' as ios_launcher_icons;
+import 'package:flutter_launcher_icons/web.dart' as web_launcher_icons;
 import 'package:flutter_launcher_icons/constants.dart';
 import 'package:flutter_launcher_icons/custom_exceptions.dart';
 
@@ -26,7 +27,8 @@ Future<void> createIconsFromArguments(List<String> arguments) async {
   }
 
   // Load the config file
-  final Map<String, dynamic> yamlConfig = loadConfigFileFromArgResults(argResults, verbose: true);
+  final Map<String, dynamic> yamlConfig =
+      loadConfigFileFromArgResults(argResults, verbose: true);
 
   // Create icons
   try {
@@ -41,7 +43,7 @@ Future<void> createIconsFromConfig(Map<String, dynamic> config) async {
   if (!isImagePathInConfig(config)) {
     throw const InvalidConfigException(errorMissingImagePath);
   }
-  if (!hasAndroidOrIOSConfig(config)) {
+  if (!hasAndroidOrIOSorWebConfig(config)) {
     throw const InvalidConfigException(errorMissingPlatform);
   }
   final int minSdk = android_launcher_icons.minSdk();
@@ -129,9 +131,10 @@ bool isImagePathInConfig(Map<String, dynamic> flutterIconsConfig) {
           flutterIconsConfig.containsKey('image_path_ios'));
 }
 
-bool hasAndroidOrIOSConfig(Map<String, dynamic> flutterIconsConfig) {
+bool hasAndroidOrIOSorWebConfig(Map<String, dynamic> flutterIconsConfig) {
   return flutterIconsConfig.containsKey('android') ||
-      flutterIconsConfig.containsKey('ios');
+      flutterIconsConfig.containsKey('ios') ||
+      flutterIconsConfig.containsKey('web');
 }
 
 bool hasAndroidConfig(Map<String, dynamic> flutterLauncherIcons) {
